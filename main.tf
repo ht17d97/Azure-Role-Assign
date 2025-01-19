@@ -1,15 +1,16 @@
-data "azurerm_subscription" "primary" {
+resource "azurerm_resource_group" "rg" {
+  name     = "example"
+  location = "South India"
 }
-
-data "azurerm_client_config" "example" {
+resource "azuread_user" "example" {
+  user_principal_name = "John.dee@himanshutariyal2025outlook.onmicrosoft.com"
+  display_name        = "John. Doe"
+  mail_nickname       = "jdoe"
+  password            = "SecretP@sswd99!"
 }
-
-data "azuread_user" "example_user" {
-  user_principal_name = "John@himanshutariyal2025outlook.onmicrosoft.com"
-}
-
-resource "azurerm_role_assignment" "example" {
-  scope                = data.azurerm_subscription.primary.id
-  role_definition_name = "Contributor"
-  principal_id         = data.azurerm_client_config.example.object_id
+resource "azurerm_role_assignment" "reader" {
+  scope                = azurerm_resource_group.rg.id
+  role_definition_name = "Reader"
+  principal_id         = azuread_user.example.object_id
+  
 }
